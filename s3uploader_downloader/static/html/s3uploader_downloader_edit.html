@@ -1,0 +1,52 @@
+<div class="wrapper-comp-settings is-active editor-with-buttons" id="settings-tab">
+  <ul class="list-input settings-list">
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="general_title">General Title</label>
+        <input class="input setting-input" name="general_title" id="general_title" type="text" value="{{general_title}}" />
+      </div>
+      <span class="tip setting-help">General title to be shown to the user in the LMS.</span>
+    </li>
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="s3_mid_folder">S3 Folder Name</label>
+        <input class="input setting-input" name="s3_mid_folder" id="s3_mid_folder" type="text" value="{{s3_mid_folder}}" />
+      </div>
+      <span class="tip setting-help">The mid-level folder name</span>
+    </li>
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="uploadable_by">Uploadable by</label>
+          <input type="radio" name="uploadable_by" id="uploadable_by_staff" style="height: inherit;width: inherit;" {{check_uploadable_by_staff}}>
+          <label style="padding-right: 100px;">Staff</label>
+          <input type="radio" name="uploadable_by" id="uploadable_by_students" style="height: inherit; width: inherit;" {{check_uploadable_by_students}}>
+          <label>Staff & Student</label>
+      </div>
+      <span class="tip setting-help">Who can upload?</span>
+    </li>
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="size_limit">Size Limit (MB)</label>
+        <input class="input setting-input" name="size_limit" id="size_limit" type="number" value="{{size_limit}}" />
+      </div>
+      <span class="tip setting-help">Size limit, in megabytes, for an upload.</span>
+    </li>
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="paginate">Paginate</label>
+        <input class="input setting-input" name="paginate" id="paginate" type="number" value="{{paginate}}" />
+      </div>
+      <span class="tip setting-help"></span>
+    </li>
+  </ul>
+  <div class="xblock-actions">
+    <ul>
+      <li class="action-item">
+        <a href="#" class="button action-primary save-button">Save</a>
+      </li>
+      <li class="action-item">
+        <a href="#" class="button cancel-button">Cancel</a>
+      </li>
+    </ul>
+  </div>
+</div>

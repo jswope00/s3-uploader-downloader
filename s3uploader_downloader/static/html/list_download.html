@@ -1,0 +1,31 @@
+<h1 style="margin: 0;">{{general_title}}</h1>
+
+<div class="modal-body" >
+    <table id="uploads" class="display" cellspacing="0" width="100%" data-page-length={{paginate}}>
+        <thead>
+            <tr>
+                <th style="min-width:200px">Name</th>
+                <th style="min-width:150px">Description</th>
+                <th style="min-width:100px">Uploaded By</th>
+                <th style="min-width:120px">Date Uploaded</th>
+                <th style="min-width:50px">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in uploaded_files %}
+            <tr>
+                <td id ="{{file.id}}" class="file_download">{{ file.file_title }}</td>
+                <td>{{ file.description }}</td>
+                <td>{{ file.uploaded_by }}</td>
+                <td>{{ file.date_uploaded }}</td>
+                <td>
+                    {% if file.uploaded_by == username or self.runtime.user_is_staff %}
+                    <span><img id = "{{file.id}}" src={{gear_icon}} class="name_edit" width="30px"></span> 
+                    <span><img id = "{{file.id}}" src={{bin_icon}} class="S3_delete" width="30px"></span> 
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
