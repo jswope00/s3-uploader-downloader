@@ -6,26 +6,71 @@ Installation
 
 Make sure that `ALLOW_ALL_ADVANCED_COMPONENTS` feature flag is set to `True` in `cms.env.json`.
 
-Get the source to the /edx/app/edxapp/ folder and execute the following command:
+Change user and activate env:
 
 ```bash
-sudo -u edxapp /edx/bin/pip.edxapp install s3-uploader-downloader/
+sudo -H -u edxapp bash
+source /edx/app/edxapp/edxapp_env
 ```
 
-To upgrade an existing installation of this XBlock, fetch the latest code and then type:
+Get the source to the /edx/app/edxapp/ folder:
 
 ```bash
-sudo -u edxapp /edx/bin/pip.edxapp install -U --no-deps s3-uploader-downloader/
+cd /edx/app/edxapp/
+git clone https://github.com/jswope00/s3-uploader-downloader.git
+
+```
+
+For Installation:
+```bash
+pip install s3-uploader-downloader/
+```
+
+To upgrade an existing installation of this XBlock, fetch the latest code and then update:
+
+```bash
+cd s3-uploader-downloader/
+git pull origin master
+pip install -U --no-deps s3-uploader-downloader/
 ```
 
 Configuration
 -------------
 
-Configure S3 keys in `lms.auth.json` and `cms.auth.json`
+Configure S3 keys in `lms.auth.json` and `cms.auth.json`:
 
 ```
 "AWS_ACCESS_KEY_ID":"YOUR_AWS_ACCESS_KEY_ID",
 "AWS_SECRET_ACCESS_KEY":"YOUR_AWS_SECRET_ACCESS_KEY"
+```
+
+Add `s3uploader_downloader` in `INSTALLED_APPS` of `lms/envs/common.py` & `cms/envs/common.py`:
+
+```bash
+cd /edx/app/edxapp/edx-platform
+nano lms/envs/common.py
+nano cms/envs/common.py
+```
+
+Run migration:
+
+```bash
+python manage.py lms makemigrations s3uploader_downloader --settings=aws
+python manage.py lms migrate s3uploader_downloader --settings=aws
+```
+
+Compile Assets:
+
+```bash
+paver update_assets cms --settings=aws
+paver update_assets lms --settings=aws
+```
+
+Restart Edxapp:
+
+```bash
+exit
+sudo /edx/bin/supervisorctl restart edxapp:
 ```
 
 Enabling in Studio
