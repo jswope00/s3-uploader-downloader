@@ -22,23 +22,33 @@
     padding: 7px 10px;
     float: left;
     text-align: center;
-    background: #00ABC7;
+    background: #0075b4;
     color: #FFFFFF;
-    border-radius: 2px;
-    border: 1px solid #37B7CC;
+    border-radius: 3px;
+    border: 1px solid #c8c8c8;
+    margin-right: 15px;
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.37) inset,
     1px 0 1px rgba(255, 255, 255, 0.07) inset,
     0 1px 0 rgba(0, 0, 0, 0.36),
     0 -2px 12px rgba(0, 0, 0, 0.08) inset
 }
 .qq-gallery .qq-upload-button-hover {
-    background: #33B6CC;
+    background: #065683;
 }
 .qq-gallery .qq-upload-button-focus {
     outline: 1px dotted #000000;
 }
 
-
+#trigger-upload{
+    border: 1px solid #c8c8c8;
+    color: #333;
+    background-color: #eee;
+    background-image: none;
+}
+#trigger-upload:hover{
+    background-color: #f1f1f1;
+    background-image: none;
+}
 /* Drop Zone
 ------------------------------------------ */
 .qq-gallery.qq-uploader {
@@ -123,7 +133,7 @@
     vertical-align: top;
 
     /* to ensure consistent size of tiles - may need to change if qq-max-size attr on preview img changes */
-    height: 186px;
+    height: 93px;
 }
 
 .qq-gallery .qq-upload-spinner,

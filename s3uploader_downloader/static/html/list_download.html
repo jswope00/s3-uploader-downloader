@@ -14,14 +14,14 @@
         <tbody>
             {% for file in uploaded_files %}
             <tr>
-                <td id ="{{file.id}}" class="file_download">{{ file.file_title }}</td>
+                <td id ="{{file.id}}" class="file_download"><a href=#>{{ file.file_title }}</a></td>
                 <td>{{ file.description }}</td>
                 <td>{{ file.uploaded_by }}</td>
                 <td>{{ file.date_uploaded }}</td>
-                <td>
+                <td style="text-align: center">
                     {% if file.uploaded_by == username or self.runtime.user_is_staff %}
-                    <span><img id = "{{file.id}}" src={{gear_icon}} class="name_edit" width="30px"></span> 
-                    <span><img id = "{{file.id}}" src={{bin_icon}} class="S3_delete" width="30px"></span> 
+                    <span><img id = "{{file.id}}" src={{gear_icon}} class="name_edit" width="15px"></span> 
+                    <span><img id = "{{file.id}}" src={{bin_icon}} class="S3_delete" width="15px"></span> 
                     {% endif %}
                 </td>
             </tr>

@@ -1,0 +1,33 @@
+#uploads_filter input{
+	border: 2px solid #c8c8c8
+}
+
+#uploads th,
+#uploads_wrapper table{
+	border-bottom: 1px solid #c8c8c8
+}
+
+
+.dataTables_wrapper 
+.dataTables_paginate 
+.paginate_button,
+.dataTables_wrapper 
+.dataTables_paginate 
+.paginate_button.current{
+	border-radius: 3px;
+	background: white;
+	border: 1px solid #c8c8c8;
+	color: black !important;
+}
+
+.dataTables_wrapper 
+.dataTables_paginate 
+.paginate_button:hover,
+.dataTables_wrapper 
+.dataTables_paginate 
+.paginate_button.current:hover{
+	border-radius: 3px;
+	border: 1px solid #c8c8c8;
+	color: black !important;
+	background: #eee
+}

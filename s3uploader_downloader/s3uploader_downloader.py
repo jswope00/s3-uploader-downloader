@@ -113,6 +113,7 @@ class UploaderDownloaderXBlock(XBlock):
         frag.add_content(loader.render_template("static/html/list_download.html",context))
         frag.add_css_url("https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css")
         frag.add_javascript_url("https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js")
+        frag.add_css(self.resource_string("static/css/s3uploader.css"))
 
         display_to_students = self.runtime.user_is_staff or self.uploadable_by_students
         if "username" in context and display_to_students:
@@ -143,8 +144,8 @@ class UploaderDownloaderXBlock(XBlock):
             frag.add_javascript(self.resource_string("static/js/src/s3.fine-uploader.core.min.js"))
             frag.add_javascript(self.resource_string("static/js/src/s3.fine-uploader.js"))
             frag.add_javascript(self.resource_string("static/js/src/s3.jquery.fine-uploader.min.js"))
-            frag.add_javascript(loader.render_template("static/js/src/s3uploader_downloader.js",context))
-            frag.initialize_js('UploaderDownloaderXBlock')
+        frag.add_javascript(loader.render_template("static/js/src/s3uploader_downloader.js",context))
+        frag.initialize_js('UploaderDownloaderXBlock')
         return frag
 
     @XBlock.json_handler

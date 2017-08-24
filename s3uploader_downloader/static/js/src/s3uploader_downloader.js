@@ -8,7 +8,7 @@ function UploaderDownloaderXBlock(runtime, element) {
         $('#uploads').DataTable({
             "lengthChange": false
         });
-    } );
+    });
 
     $(function ($) {
         var signature_url = runtime.handlerUrl(element, 'sign_content');
@@ -44,7 +44,7 @@ function UploaderDownloaderXBlock(runtime, element) {
             },
 
             chunking: {
-                enabled: true,
+                enabled: false,
             },
             resume: {
                 enabled: true
@@ -133,7 +133,8 @@ function UploaderDownloaderXBlock(runtime, element) {
         });
 
     });
-    $(".file_download").click(function() {
+    $(".file_download").click(function(e) {
+        e.preventDefault();
         var download_file_url = runtime.handlerUrl(element, 'download_file');
         $.ajax({
             url: download_file_url,
