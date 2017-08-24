@@ -31,10 +31,10 @@ class UploaderDownloaderXBlock(XBlock):
     """
 
     display_name = String(
-        display_name="SGU Uploader",
+        display_name="S3 Uploader Downloader",
         help="This name appears in the horizontal navigation at the top of the page.",
         scope=Scope.settings,
-        default="SGU Uploader"
+        default="S3 Uploader Downloder"
     )
 
     general_title = String(default=None, scope=Scope.content, help="General Title")
@@ -205,7 +205,7 @@ class UploaderDownloaderXBlock(XBlock):
         S3 = S3Connection(settings.AWS_ACCESS_KEY_ID,settings.AWS_SECRET_ACCESS_KEY)
         if boto:
             file_id = data.get('file_id', None)
-            bucket_name = 'public-sgu'
+            bucket_name = self.s3_bucket
             aws_bucket = S3.get_bucket(bucket_name, validate=False)
 
             fileuploader = FileUploader()

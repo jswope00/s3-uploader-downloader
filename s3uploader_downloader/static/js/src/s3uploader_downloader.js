@@ -18,7 +18,7 @@ function UploaderDownloaderXBlock(runtime, element) {
         var uploader = new qq.s3.FineUploader({
             element: document.getElementById("uploader"),
             request: {
-                endpoint: "https://public-sgu.s3.amazonaws.com",
+                endpoint: "https://{{self.s3_bucket}}.s3.amazonaws.com",
                 accessKey: "{{aws_key}}"
             },
             objectProperties: {
