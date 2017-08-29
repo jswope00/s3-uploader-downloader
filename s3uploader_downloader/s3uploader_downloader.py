@@ -18,7 +18,7 @@ from xblockutils.resources import ResourceLoader
 from xmodule.modulestore.django import modulestore
 from django.conf import settings
 
-from .models import FileUploader, FileUpload
+from .models import FileAndUrl, FileUploadAndUrl
 import boto
 from boto.s3.connection import Key, S3Connection
 from courseware.access import has_access
@@ -37,8 +37,8 @@ class UploaderDownloaderXBlock(XBlock):
         default="S3 Uploader Downloder"
     )
 
-    general_title = String(default=None, scope=Scope.content, help="General Title")
-    s3_mid_folder = String(default=None, scope=Scope.content)
+    general_title = String(default="", scope=Scope.content, help="General Title")
+    s3_mid_folder = String(default="", scope=Scope.content)
     uploadable_by_students = Boolean(default=False, scope=Scope.settings)
     size_limit = Integer(default=10,scope=Scope.content,help="Number of recordings on one page")
     paginate = Integer(default=20,scope=Scope.content)
@@ -94,11 +94,11 @@ class UploaderDownloaderXBlock(XBlock):
         """
         unit_location = modulestore().get_parent_location(self.location)
         unit_id = unit_location.name
-        data = FileUpload.objects.filter(unit_id=unit_id)
+        data = FileUploadAndUrl.objects.filter(unit_id=unit_id)
 
         context.update({
                         "self": self,
-                        "uploaded_files":data,
+                        "data":data,
                         "paginate":self.paginate,
                         "aws_key":settings.AWS_ACCESS_KEY_ID,
                         "unit_id":unit_id,
@@ -181,9 +181,10 @@ class UploaderDownloaderXBlock(XBlock):
         uploaded_by = data.get('uploaded_by', None)
         unit_id = data.get('unit_id', None)
         folder_name = self.s3_mid_folder
+        is_url = False
 
-        fileuploader = FileUploader()
-        fileuploader.create_record(file_name, file_title, description, uploaded_by, unit_id, folder_name)
+        fileuploader = FileAndUrl()
+        fileuploader.create_record(file_name, file_title, description, uploaded_by, unit_id, folder_name, is_url)
         return
 
     @XBlock.json_handler
@@ -191,9 +192,9 @@ class UploaderDownloaderXBlock(XBlock):
         file_id = data.get('file_id', None)
         file_title = data.get('file_title', None)
         description = data.get('description', None)
-
-        fileuploader = FileUploader()
-        fileuploader.update_record(file_id, file_title, description)
+        is_url = False
+        fileuploader = FileAndUrl()
+        fileuploader.update_record(file_id, None, file_title, description, is_url)
         return    
 
     @XBlock.json_handler
@@ -208,7 +209,7 @@ class UploaderDownloaderXBlock(XBlock):
             bucket_name = self.s3_bucket
             aws_bucket = S3.get_bucket(bucket_name, validate=False)
 
-            fileuploader = FileUploader()
+            fileuploader = FileAndUrl()
             #Delete for S3
             file_key = Key(aws_bucket, fileuploader.get_file_path(file_id))
             file_key.delete()
@@ -226,7 +227,7 @@ class UploaderDownloaderXBlock(XBlock):
         """
         S3 = S3Connection(settings.AWS_ACCESS_KEY_ID,settings.AWS_SECRET_ACCESS_KEY)
         file_id = data.get('file_id', None)
-        fileuploader = FileUploader()
+        fileuploader = FileAndUrl()
         url = S3.generate_url(
             60,
             'GET',
@@ -236,6 +237,40 @@ class UploaderDownloaderXBlock(XBlock):
                 'response-content-type': 'application/octet-stream'
             })
         return url
+
+    @XBlock.json_handler
+    def add_url_details(self, data, suffix=''):
+        addUrl = data.get('addUrl', None)
+        addUrlName = data.get('addUrlName', None)
+        addUrlDescription = data.get('addUrlDescription', None)
+        uploaded_by = data.get('uploaded_by', None)
+        unit_id = data.get('unit_id', None)
+        folder_name = None
+        is_url = True
+
+        urlClass = FileAndUrl()
+        urlClass.create_record(addUrl, addUrlName, addUrlDescription, uploaded_by, unit_id, folder_name, is_url)
+        return
+    
+    @XBlock.json_handler
+    def edit_url_details(self, data, suffix=''):
+
+        url_id = data.get('url_id', None)
+        url_src = data.get('url_src', None)
+        url_title = data.get('url_title', None)
+        url_description = data.get('url_description', None)
+        is_url = True
+
+        fileAndUrl = FileAndUrl()
+        fileAndUrl.update_record(url_id, url_src, url_title, url_description, is_url)
+        return
+
+    @XBlock.json_handler
+    def delete_url_row(self, data, suffix=''):
+        row_id = data.get('row_id', None)
+        fileAndUrl = FileAndUrl()
+        fileAndUrl.delete_record(row_id)
+        return
 
     def make_response(self, status=200, content=None):
         """ Construct an HTTP response. Fine Uploader expects 'application/json'.

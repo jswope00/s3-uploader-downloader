@@ -91,6 +91,13 @@
     </div>
 </script>
 
+<div style="text-align: center;">
+    <div>OR</div>
+    <div> 
+        <button type="button" id="trigger-add-url" style="float: none; margin-right: 0px;font-weight: normal;">Add URL</button>
+    </div>
+</div>
+
 <div class="modal file-detail-modal fade" style="width: 100%; background: none;">
     <div class="modal-dialog" role="document" style="background: #474747;padding: 10px;">
         <div class="modal-content" style="border-radius:0px;border:0px;border-top-left-radius: 0.3rem;border-top-right-radius: 0.3rem;">
@@ -111,7 +118,37 @@
             </div>
         </div>
         <div class="modal-footer" style="background-color: #fff;border-top-width: 0px;border-bottom-left-radius: 0.3rem;border-bottom-right-radius: 0.3rem;">
-            <button id="editSave" type="button" class="btn btn-secondary" data-dismiss="modal">Save</button>
+            <button id="s3editSave" type="button" class="btn btn-secondary" data-dismiss="modal">Save</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal url-detail-modal fade" style="width: 100%; background: none;">
+    <div class="modal-dialog" role="document" style="background: #474747;padding: 10px;">
+        <div class="modal-content" style="border-radius:0px;border:0px;border-top-left-radius: 0.3rem;border-top-right-radius: 0.3rem;">
+            <div class="modal-header">
+                <h5 class="modal-title">URL Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <input id="editUrlID" type="hidden" name="editFileID" value="">
+            <div style="padding: 30px;">
+                <label for="addUrl">URL<sup>*</sup>:</label><br>
+                <input type="text" id="addUrl" name="addUrl" style="width: 100%;" required>
+            </div>
+            <div style="padding: 30px;padding-top: 0px;">
+                <label for="addUrlName">Name<sup>*</sup>:</label><br>
+                <input type="text" id="addUrlName" name="addUrlName" style="width: 100%;" required>
+            </div>
+            <div style="padding: 30px;padding-top: 0px;">
+                <label for="addUrlDescription">Description:</label><br>
+                <input type="text" id="addUrlDescription" name="addUrlDescription" style="width: 100%;">
+            </div>
+        </div>
+        <div class="modal-footer" style="background-color: #fff;border-top-width: 0px;border-bottom-left-radius: 0.3rem;border-bottom-right-radius: 0.3rem;">
+            <label style="display: none; color: red" id="required_error">Kindly fill required<sup>*</sup> fields</label>
+            <button id="urlEditSave" type="button" class="btn btn-secondary" data-dismiss="modal">Save</button>
         </div>
     </div>
 </div>

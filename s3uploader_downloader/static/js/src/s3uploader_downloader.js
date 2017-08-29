@@ -111,28 +111,54 @@ function UploaderDownloaderXBlock(runtime, element) {
         qq(document.getElementById("trigger-upload")).attach("click", function () {
             uploader.uploadStoredFiles();
         });
-    });
-    
-    $(".S3_delete").click(function() {
-        var delete_file_url = runtime.handlerUrl(element, 'delete_file');
-        $.ajax({
-            url: delete_file_url,
-            type: "POST",
-            data: JSON.stringify({ 
-                file_id: this.id,
-            }),
-            success: function (data) {
-                console.log("Success : ");
-                console.log(data);
-                location.reload();
-            },
-            error: function (error) {
-                console.log("Error : ");
-                console.log(error);
-            }
+        qq(document.getElementById("trigger-add-url")).attach("click", function () {
+            $('.url-detail-modal').modal('show');
         });
 
     });
+    
+    $(".delete_row").click(function(e) {
+        e.preventDefault();
+        if ($(this).parents('tr')["0"].childNodes[1].childNodes[0].target.length>0) {
+            var delete_url_row_url = runtime.handlerUrl(element, 'delete_url_row');
+            $.ajax({
+                url: delete_url_row_url,
+                type: "POST",
+                data: JSON.stringify({ 
+                    row_id: this.id,
+                }),
+                success: function (data) {
+                    console.log("Success : ");
+                    console.log(data);
+                    location.reload();
+                },
+                error: function (error) {
+                    console.log("Error : ");
+                    console.log(error);
+                }
+            });
+
+        }else{
+            var delete_file_url = runtime.handlerUrl(element, 'delete_file');
+            $.ajax({
+                url: delete_file_url,
+                type: "POST",
+                data: JSON.stringify({ 
+                    file_id: this.id,
+                }),
+                success: function (data) {
+                    console.log("Success : ");
+                    console.log(data);
+                    location.reload();
+                },
+                error: function (error) {
+                    console.log("Error : ");
+                    console.log(error);
+                }
+            });
+        }
+    });
+
     $(".file_download").click(function(e) {
         e.preventDefault();
         var download_file_url = runtime.handlerUrl(element, 'download_file');
@@ -153,16 +179,28 @@ function UploaderDownloaderXBlock(runtime, element) {
 
     });
 
-    $(".name_edit").click(function() {
-        var fileName = $(this).parents('tr')["0"].childNodes[1].innerText;
-        var fileDesc = $(this).parents('tr')["0"].childNodes[3].innerText;
-        $('#s3filename').val(fileName);
-        $('#s3description').val(fileDesc);
-        $('#editFileID').val(this.id);
-        $('.file-detail-modal').modal('show');
+    $(".name_edit").click(function(e) {
+        e.preventDefault();
+        var title = $(this).parents('tr')["0"].childNodes[1].innerText;
+        var description = $(this).parents('tr')["0"].childNodes[3].innerText;
+        //To Check if its file or URL
+        if ($(this).parents('tr')["0"].childNodes[1].childNodes[0].target.length>0) {
+            var url = $(this).parents('tr')["0"].childNodes[1].childNodes[0].href;
+            $('#addUrl').val(url);
+            $('#addUrlName').val(title);
+            $('#addUrlDescription').val(description);
+            $('#editUrlID').val(this.id);
+            $('.url-detail-modal').modal('show');
+        }else{
+            
+            $('#s3filename').val(title);
+            $('#s3description').val(description);
+            $('#editFileID').val(this.id);
+            $('.file-detail-modal').modal('show');
+        }
     });
 
-    $("#editSave").click(function() {
+    $("#s3editSave").click(function() {
         if($('#editFileID').val().length>0)
         {
             var edit_file_url = runtime.handlerUrl(element, 'edit_file_details');
@@ -177,7 +215,8 @@ function UploaderDownloaderXBlock(runtime, element) {
                 success: function (data) {
                     console.log("Success : ");
                     console.log(data);
-                    location.reload();                },
+                    location.reload();                
+                },
                 error: function (error) {
                     console.log("Error : ");
                     console.log(error);
@@ -185,5 +224,59 @@ function UploaderDownloaderXBlock(runtime, element) {
             });
         }
     });
-    
+
+    $("#urlEditSave").click(function(e) {
+        if($('#addUrl').val().length>0 & $('#addUrlName').val().length>0){
+            //for Updating URL
+            if($('#editUrlID').val().length>0){
+                var edit_url_details_url = runtime.handlerUrl(element, 'edit_url_details');
+                $.ajax({
+                    url: edit_url_details_url,
+                    type: "POST",
+                    data: JSON.stringify({ 
+                        url_id: $('#editUrlID').val(),
+                        url_src: $('#addUrl').val(),
+                        url_title: $('#addUrlName').val(),
+                        url_description: $('#addUrlDescription').val()
+                    }),
+                    success: function (data) {
+                        console.log("Success : ");
+                        console.log(data);
+                        location.reload();                
+                    },
+                    error: function (error) {
+                        console.log("Error : ");
+                        console.log(error);
+                    }
+                });
+            }
+            //for Adding Url
+            else{
+                var add_url_details_url = runtime.handlerUrl(element, 'add_url_details');
+                $.ajax({
+                    url: add_url_details_url,
+                    type: "POST",
+                    data: JSON.stringify({
+                            addUrl: $('#addUrl').val(),
+                            addUrlName: $('#addUrlName').val(),
+                            addUrlDescription: $('#addUrlDescription').val(),
+                            uploaded_by: "{{username}}",
+                            unit_id: "{{unit_id}}"
+                    }),
+                    success: function (data) {
+                        console.log("Success : ");
+                        console.log(data);
+                        location.reload();                
+                    },
+                    error: function (error) {
+                        console.log("Error : ");
+                        console.log(error);
+                    }
+                });
+            }
+        }else{
+            $('#required_error').show();
+            return false;
+        }
+    });
 }

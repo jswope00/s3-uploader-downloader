@@ -16,7 +16,8 @@
 
 /* Upload Button
 ------------------------------------------ */
-.qq-gallery .qq-upload-button {
+.qq-gallery .qq-upload-button,
+#trigger-add-url {
     display: inline;
     width: 105px;
     padding: 7px 10px;
@@ -32,7 +33,8 @@
     0 1px 0 rgba(0, 0, 0, 0.36),
     0 -2px 12px rgba(0, 0, 0, 0.08) inset
 }
-.qq-gallery .qq-upload-button-hover {
+.qq-gallery .qq-upload-button-hover,
+#trigger-add-url:hover {
     background: #065683;
 }
 .qq-gallery .qq-upload-button-focus {

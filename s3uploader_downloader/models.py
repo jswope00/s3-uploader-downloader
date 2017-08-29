@@ -5,46 +5,50 @@ from django.db import models
 from datetime import datetime
 
 
-class FileUpload(models.Model):
+class FileUploadAndUrl(models.Model):
 
-    file_name = models.CharField(max_length=200)
-    file_title = models.CharField(max_length=200)
+    src_name = models.CharField(max_length=200)
+    title = models.CharField(max_length=200)
     description = models.TextField()
     date_uploaded = models. DateTimeField()
     uploaded_by = models.CharField(max_length=200)
     unit_id = models.CharField(max_length=35)
-    folder_name = models.CharField(max_length=200,null=True)
+    folder_name = models.CharField(max_length=200)
+    is_url = models.BooleanField(default=False)
 
+class FileAndUrl():
 
-class FileUploader():
-
-    def create_record(self, file_name, file_title, description, uploaded_by, unit_id, folder_name):
+    def create_record(self, src_name, title, description, uploaded_by, unit_id, folder_name, is_url):
             upload_date = datetime.now()
-            upload_record = FileUpload(
-                file_name=file_name,
-                file_title=file_title,
+            upload_record = FileUploadAndUrl(
+                src_name=src_name,
+                title=title,
                 description=description,
                 date_uploaded=upload_date,
                 uploaded_by=uploaded_by,
                 unit_id=unit_id,
-                folder_name=folder_name)
+                folder_name=folder_name,
+                is_url=is_url)
             upload_record.save()
             return {"status": "success"}
 
-    def update_record(self, file_id, file_title, description):
-        file = FileUpload.objects.get(id=file_id)
-        file.file_title=file_title
-        file.description=description
-        file.save()
+    def update_record(self, row_id, src_name, title, description, is_url):
+        row = FileUploadAndUrl.objects.get(id=row_id)
+        row.title=title
+        row.description=description
+        if is_url:
+            row.src_name=src_name
+        row.save()
+        
 
-    def delete_record(self, file_id):
-            file = FileUpload.objects.get(id=file_id)
-            file.delete()
+    def delete_record(self, row_id):
+            row = FileUploadAndUrl.objects.get(id=row_id)
+            row.delete()
             return {"status": "success"}
 
     def get_file_path(self, file_id):
-        file = FileUpload.objects.get(id=file_id)
+        file = FileUploadAndUrl.objects.get(id=file_id)
         if file.folder_name == "":
-            return file.unit_id+"/"+file.file_name
+            return file.unit_id+"/"+file.src_name
         else:
-            return file.folder_name+"/"+file.unit_id+"/"+file.file_name
+            return file.folder_name+"/"+file.unit_id+"/"+file.src_name
