@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('s3uploader_downloader', '0005_auto_20170828_0753'),
+        ('s3uploader_downloader', '0003_auto_20170825_0940'),
     ]
 
     operations = [
