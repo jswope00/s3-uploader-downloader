@@ -13,7 +13,7 @@ class FileUploadAndUrl(models.Model):
     date_uploaded = models. DateTimeField()
     uploaded_by = models.CharField(max_length=200)
     unit_id = models.CharField(max_length=35)
-    folder_name = models.CharField(max_length=200)
+    folder_name = models.CharField(max_length=200,null=True)
     is_url = models.BooleanField(default=False)
 
 class FileAndUrl():
