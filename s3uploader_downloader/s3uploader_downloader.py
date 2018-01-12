@@ -23,7 +23,13 @@ import boto
 from boto.s3.connection import Key, S3Connection
 from courseware.access import has_access
 # Please start and end the path with a trailing slash
+
 loader = ResourceLoader(__name__)
+
+import logging
+
+log = logging.getLogger(__name__)
+
 
 class UploaderDownloaderXBlock(XBlock):
     """
@@ -87,6 +93,10 @@ class UploaderDownloaderXBlock(XBlock):
 
         return {'result': 'success'}
 
+    def get_course(self):
+
+        return self.scope_ids.usage_id.course_key
+
     def student_view(self, context=None):
         """
         The primary view of the UploaderDownloaderXBlock, shown to students
@@ -94,7 +104,9 @@ class UploaderDownloaderXBlock(XBlock):
         """
         unit_location = modulestore().get_parent_location(self.location)
         unit_id = unit_location.name
-        data = FileUploadAndUrl.objects.filter(unit_id=unit_id)
+	course = self.get_course()
+	course_run = course.run
+        data = FileUploadAndUrl.objects.filter(unit_id=unit_id , folder_name=course_run)
 
         context.update({
                         "self": self,
