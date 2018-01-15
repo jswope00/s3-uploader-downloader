@@ -23,13 +23,10 @@ import boto
 from boto.s3.connection import Key, S3Connection
 from courseware.access import has_access
 # Please start and end the path with a trailing slash
-
 loader = ResourceLoader(__name__)
 
 import logging
-
 log = logging.getLogger(__name__)
-
 
 class UploaderDownloaderXBlock(XBlock):
     """
@@ -106,8 +103,7 @@ class UploaderDownloaderXBlock(XBlock):
         unit_id = unit_location.name
 	course = self.get_course()
 	course_run = course.run
-        data = FileUploadAndUrl.objects.filter(unit_id=unit_id , folder_name=course_run)
-
+	data = FileUploadAndUrl.objects.filter(unit_id=unit_id , folder_name=course_run)
         context.update({
                         "self": self,
                         "data":data,
@@ -118,7 +114,7 @@ class UploaderDownloaderXBlock(XBlock):
                         "general_title":self.general_title,
                         "size_limit":self.size_limit,
                         "bin_icon":self.runtime.local_resource_url(self, 'static/img/bin.png'),
-                        "gear_icon":self.runtime.local_resource_url(self, 'static/img/gear.png')                      
+                        "gear_icon":self.runtime.local_resource_url(self, 'static/img/gear.png')
                     })
 
         frag = Fragment()
@@ -207,7 +203,7 @@ class UploaderDownloaderXBlock(XBlock):
         is_url = False
         fileuploader = FileAndUrl()
         fileuploader.update_record(file_id, None, file_title, description, is_url)
-        return    
+        return
 
     @XBlock.json_handler
     def delete_file(self, data, suffix=''):
@@ -257,7 +253,8 @@ class UploaderDownloaderXBlock(XBlock):
         addUrlDescription = data.get('addUrlDescription', None)
         uploaded_by = data.get('uploaded_by', None)
         unit_id = data.get('unit_id', None)
-        folder_name = None
+        course = self.get_course()
+	folder_name = course.run
         is_url = True
 
         urlClass = FileAndUrl()
