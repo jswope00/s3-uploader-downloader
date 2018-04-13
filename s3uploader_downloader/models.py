@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 from datetime import datetime
+import logging
+log = logging.getLogger(__name__)
 
 
 class FileUploadAndUrl(models.Model):
@@ -14,11 +16,12 @@ class FileUploadAndUrl(models.Model):
     uploaded_by = models.CharField(max_length=200)
     unit_id = models.CharField(max_length=35)
     folder_name = models.CharField(max_length=200,null=True)
+    course_level = models.CharField(max_length=35,null=True)
     is_url = models.BooleanField(default=False)
 
 class FileAndUrl():
 
-    def create_record(self, src_name, title, description, uploaded_by, unit_id, folder_name, is_url):
+    def create_record(self, src_name, title, description, uploaded_by, unit_id, course_level, folder_name, is_url):
             upload_date = datetime.now()
             upload_record = FileUploadAndUrl(
                 src_name=src_name,
@@ -27,6 +30,7 @@ class FileAndUrl():
                 date_uploaded=upload_date,
                 uploaded_by=uploaded_by,
                 unit_id=unit_id,
+                course_level=course_level,
                 folder_name=folder_name,
                 is_url=is_url)
             upload_record.save()
@@ -39,7 +43,7 @@ class FileAndUrl():
         if is_url:
             row.src_name=src_name
         row.save()
-        
+
 
     def delete_record(self, row_id):
             row = FileUploadAndUrl.objects.get(id=row_id)
@@ -48,7 +52,7 @@ class FileAndUrl():
 
     def get_file_path(self, file_id):
         file = FileUploadAndUrl.objects.get(id=file_id)
-        if file.folder_name == "":
-            return file.unit_id+"/"+file.src_name
+        if file.folder_name == file.course_level:
+	    return file.course_level+"/"+file.unit_id+"/"+file.src_name
         else:
             return file.folder_name+"/"+file.unit_id+"/"+file.src_name

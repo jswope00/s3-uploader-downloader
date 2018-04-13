@@ -94,6 +94,11 @@ class UploaderDownloaderXBlock(XBlock):
 
         return self.scope_ids.usage_id.course_key
 
+    def get_course_level(self):
+        course = self.scope_ids.usage_id.course_key
+        course_level = course.course
+        return course_level
+
     def student_view(self, context=None):
         """
         The primary view of the UploaderDownloaderXBlock, shown to students
@@ -101,9 +106,8 @@ class UploaderDownloaderXBlock(XBlock):
         """
         unit_location = modulestore().get_parent_location(self.location)
         unit_id = unit_location.name
-	course = self.get_course()
-	course_run = course.run
-	data = FileUploadAndUrl.objects.filter(unit_id=unit_id , folder_name=course_run)
+        course_level = self.get_course_level()
+        data = FileUploadAndUrl.objects.filter(unit_id=unit_id , course_level=course_level)
         context.update({
                         "self": self,
                         "data":data,
@@ -111,6 +115,7 @@ class UploaderDownloaderXBlock(XBlock):
                         "aws_key":settings.AWS_ACCESS_KEY_ID,
                         "unit_id":unit_id,
                         "s3_mid_folder":self.s3_mid_folder,
+			"course_level":course_level,
                         "general_title":self.general_title,
                         "size_limit":self.size_limit,
                         "bin_icon":self.runtime.local_resource_url(self, 'static/img/bin.png'),
@@ -188,11 +193,15 @@ class UploaderDownloaderXBlock(XBlock):
         description = data.get('description', None)
         uploaded_by = data.get('uploaded_by', None)
         unit_id = data.get('unit_id', None)
+        course_level = self.get_course_level()
         folder_name = self.s3_mid_folder
         is_url = False
-
+        if folder_name is None:
+            folder_name = course_level
+        else:
+	    folder_name = course_level + '/' + folder_name
         fileuploader = FileAndUrl()
-        fileuploader.create_record(file_name, file_title, description, uploaded_by, unit_id, folder_name, is_url)
+        fileuploader.create_record(file_name, file_title, description, uploaded_by, unit_id, course_level, folder_name, is_url)
         return
 
     @XBlock.json_handler
@@ -218,6 +227,7 @@ class UploaderDownloaderXBlock(XBlock):
             aws_bucket = S3.get_bucket(bucket_name, validate=False)
 
             fileuploader = FileAndUrl()
+	    log.info(u"fileuploader.get_file_path(file_id)%s",fileuploader.get_file_path(file_id))
             #Delete for S3
             file_key = Key(aws_bucket, fileuploader.get_file_path(file_id))
             file_key.delete()
@@ -254,13 +264,14 @@ class UploaderDownloaderXBlock(XBlock):
         uploaded_by = data.get('uploaded_by', None)
         unit_id = data.get('unit_id', None)
         course = self.get_course()
-	folder_name = course.run
+        folder_name = None
+        course_level = self.get_course_level()
         is_url = True
 
         urlClass = FileAndUrl()
-        urlClass.create_record(addUrl, addUrlName, addUrlDescription, uploaded_by, unit_id, folder_name, is_url)
+        urlClass.create_record(addUrl, addUrlName, addUrlDescription, uploaded_by, unit_id, course_level, folder_name, is_url)
         return
-    
+
     @XBlock.json_handler
     def edit_url_details(self, data, suffix=''):
 

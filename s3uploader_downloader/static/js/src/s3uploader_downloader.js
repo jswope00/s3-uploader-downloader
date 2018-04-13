@@ -14,6 +14,7 @@ function UploaderDownloaderXBlock(runtime, element) {
         var signature_url = runtime.handlerUrl(element, 'sign_content');
         var s3_success_url = runtime.handlerUrl(element, 's3_success_endpoint');
         var add_file_url = runtime.handlerUrl(element, 'add_file_details');
+        var course_level = '{{course_level}}';
         var s3_mid_folder = '{{s3_mid_folder}}';
         var uploader = new qq.s3.FineUploader({
             element: document.getElementById("uploader"),
@@ -26,9 +27,9 @@ function UploaderDownloaderXBlock(runtime, element) {
                     var filename = uploader.getName(fileId);
                     var fileUUID = uploader.getUuid(fileId);
                     if (s3_mid_folder.length > 0){
-                        return s3_mid_folder+'/{{unit_id}}/'+fileUUID+filename;    
+                        return course_level+'/'+s3_mid_folder+'/'+"{{unit_id}}"+'/'+fileUUID+'/'+filename;
                     }else{
-                        return '{{unit_id}}/'+fileUUID+filename;
+                        return course_level+'/'+"{{unit_id}}"+'/'+fileUUID+'/'+filename;
                     }
                 },
             },
@@ -72,7 +73,7 @@ function UploaderDownloaderXBlock(runtime, element) {
                             url: add_file_url,
                             type: "POST",
                             data: JSON.stringify({
-                                file_name: foldername+fileNameExt,
+                                file_name: foldername+'/'+fileNameExt,
                                 file_title: $('#s3filename').val(),
                                 description: $('#s3description').val(),
                                 uploaded_by: "{{username}}",
