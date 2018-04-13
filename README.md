@@ -31,6 +31,7 @@ To upgrade an existing installation of this XBlock, fetch the latest code and th
 ```bash
 cd s3-uploader-downloader/
 git pull origin master
+cd ..
 pip install -U --no-deps s3-uploader-downloader/
 ```
 
