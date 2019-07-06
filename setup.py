@@ -33,7 +33,7 @@ setup(
     ],
     entry_points={
         'xblock.v1': [
-            's3uploader_downloader = s3uploader_downloader:UploaderDownloaderXBlock',
+            's3uploader_downloader = s3uploader_downloader.s3uploader_downloader:UploaderDownloaderXBlock',
         ]
     },
     package_data=package_data("s3uploader_downloader", ["static", "public"]),
