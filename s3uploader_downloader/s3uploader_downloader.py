@@ -74,6 +74,34 @@ class UploaderDownloaderXBlock(XBlock):
         fragment.add_content(loader.render_template("static/html/s3uploader_downloader_edit.html",context))
 
         fragment.add_javascript(self.resource_string("static/js/src/s3uploader_downloader_edit.js"))
+
+        fragment.add_content(self.resource_string("static/html/s3uploader.html"))
+        css_context = dict(
+            continue_gif=self.runtime.local_resource_url(self, 'static/img/continue.gif'),
+            edit=self.runtime.local_resource_url(self, 'static/img/edit.gif'),
+            loading=self.runtime.local_resource_url(self, 'static/img/loading.gif'),
+            pause=self.runtime.local_resource_url(self, 'static/img/pause.gif'),
+            processing=self.runtime.local_resource_url(self, 'static/img/processing.gif'),
+            retry=self.runtime.local_resource_url(self, 'static/img/retry.gif'),
+            trash=self.runtime.local_resource_url(self, 'static/img/trash.gif'),
+        )
+        css = loader.render_template('static/css/fine-uploader-gallery.css', css_context)
+        fragment.add_css(css)
+
+        fragment.add_css(self.resource_string("static/css/fine-uploader.min.css"))
+        fragment.add_css(self.resource_string("static/css/bootstrap.min.css"))
+        fragment.add_css(self.resource_string("static/css/bootstrap-grid.min.css"))
+        fragment.add_css(self.resource_string("static/css/bootstrap-reboot.min.css"))
+
+        fragment.add_javascript_url("https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js")
+        fragment.add_javascript_url("https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.3/js.cookie.min.js")
+
+        fragment.add_javascript(self.resource_string("static/js/src/bootstrap.min.js"))
+        fragment.add_javascript(self.resource_string("static/js/src/dnd.min.js"))
+        fragment.add_javascript(self.resource_string("static/js/src/s3.fine-uploader.core.min.js"))
+        fragment.add_javascript(self.resource_string("static/js/src/s3.fine-uploader.js"))
+        fragment.add_javascript(self.resource_string("static/js/src/s3.jquery.fine-uploader.min.js"))
+
         fragment.initialize_js('s3UploaderDownloaderEditBlock')
         return fragment
 
