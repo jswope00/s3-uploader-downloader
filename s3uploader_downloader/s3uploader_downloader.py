@@ -15,13 +15,10 @@ import hashlib
 import json
 from django.http import HttpResponse
 from xblockutils.resources import ResourceLoader
-from xmodule.modulestore.django import modulestore
 from django.conf import settings
 
-from .models import FileAndUrl, FileUploadAndUrl
 import boto
 from boto.s3.connection import Key, S3Connection
-from courseware.access import has_access
 # Please start and end the path with a trailing slash
 loader = ResourceLoader(__name__)
 
@@ -104,6 +101,8 @@ class UploaderDownloaderXBlock(XBlock):
         The primary view of the UploaderDownloaderXBlock, shown to students
         when viewing courses.
         """
+        from .models import FileUploadAndUrl
+        from xmodule.modulestore.django import modulestore
         unit_location = modulestore().get_parent_location(self.location)
         unit_id = unit_location.name
         course_level = self.get_course_level()
@@ -188,6 +187,7 @@ class UploaderDownloaderXBlock(XBlock):
 
     @XBlock.json_handler
     def add_file_details(self, data, suffix=''):
+        from .models import FileAndUrl
         file_name = data.get('file_name', None)
         file_title = data.get('file_title', None)
         description = data.get('description', None)
@@ -206,6 +206,7 @@ class UploaderDownloaderXBlock(XBlock):
 
     @XBlock.json_handler
     def edit_file_details(self, data, suffix=''):
+        from .models import FileAndUrl
         file_id = data.get('file_id', None)
         file_title = data.get('file_title', None)
         description = data.get('description', None)
@@ -219,6 +220,7 @@ class UploaderDownloaderXBlock(XBlock):
         """ Handle file deletion requests. For this, we use the Amazon Python SDK,
         boto.
         """
+        from .models import FileAndUrl
         boto.set_stream_logger('boto')
         S3 = S3Connection(settings.AWS_ACCESS_KEY_ID,settings.AWS_SECRET_ACCESS_KEY)
         if boto:
@@ -243,6 +245,7 @@ class UploaderDownloaderXBlock(XBlock):
         """ Handle file deletion requests. For this, we use the Amazon Python SDK,
         boto.
         """
+        from .models import FileAndUrl
         S3 = S3Connection(settings.AWS_ACCESS_KEY_ID,settings.AWS_SECRET_ACCESS_KEY)
         file_id = data.get('file_id', None)
         fileuploader = FileAndUrl()
@@ -258,6 +261,7 @@ class UploaderDownloaderXBlock(XBlock):
 
     @XBlock.json_handler
     def add_url_details(self, data, suffix=''):
+        from .models import FileAndUrl
         addUrl = data.get('addUrl', None)
         addUrlName = data.get('addUrlName', None)
         addUrlDescription = data.get('addUrlDescription', None)
@@ -274,7 +278,7 @@ class UploaderDownloaderXBlock(XBlock):
 
     @XBlock.json_handler
     def edit_url_details(self, data, suffix=''):
-
+        from .models import FileAndUrl
         url_id = data.get('url_id', None)
         url_src = data.get('url_src', None)
         url_title = data.get('url_title', None)
@@ -287,6 +291,7 @@ class UploaderDownloaderXBlock(XBlock):
 
     @XBlock.json_handler
     def delete_url_row(self, data, suffix=''):
+        from .models import FileAndUrl
         row_id = data.get('row_id', None)
         fileAndUrl = FileAndUrl()
         fileAndUrl.delete_record(row_id)
