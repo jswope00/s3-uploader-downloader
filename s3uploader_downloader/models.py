@@ -22,19 +22,19 @@ class FileUploadAndUrl(models.Model):
 class FileAndUrl():
 
     def create_record(self, src_name, title, description, uploaded_by, unit_id, course_level, folder_name, is_url):
-            upload_date = datetime.now()
-            upload_record = FileUploadAndUrl(
-                src_name=src_name,
-                title=title,
-                description=description,
-                date_uploaded=upload_date,
-                uploaded_by=uploaded_by,
-                unit_id=unit_id,
-                course_level=course_level,
-                folder_name=folder_name,
-                is_url=is_url)
-            upload_record.save()
-            return {"status": "success"}
+        upload_date = datetime.now()
+        upload_record = FileUploadAndUrl(
+            src_name=src_name,
+            title=title,
+            description=description,
+            date_uploaded=upload_date,
+            uploaded_by=uploaded_by,
+            unit_id=unit_id,
+            course_level=course_level,
+            folder_name=folder_name,
+            is_url=is_url)
+        upload_record.save()
+        return {"status": "success"}
 
     def update_record(self, row_id, src_name, title, description, is_url):
         row = FileUploadAndUrl.objects.get(id=row_id)
@@ -46,13 +46,15 @@ class FileAndUrl():
 
 
     def delete_record(self, row_id):
-            row = FileUploadAndUrl.objects.get(id=row_id)
-            row.delete()
-            return {"status": "success"}
+        row = FileUploadAndUrl.objects.get(id=row_id)
+        row.delete()
+        return {"status": "success"}
 
     def get_file_path(self, file_id):
         file = FileUploadAndUrl.objects.get(id=file_id)
+        abs_path = ""
         if file.folder_name == file.course_level:
-	    return file.course_level+"/"+file.unit_id+"/"+file.src_name
+            abs_path = file.course_level+"/"+file.unit_id+"/"+file.src_name
         else:
-            return file.folder_name+"/"+file.unit_id+"/"+file.src_name
+            abs_path = file.folder_name+"/"+file.unit_id+"/"+file.src_name
+        return abs_path

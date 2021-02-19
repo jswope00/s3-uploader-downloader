@@ -114,7 +114,7 @@ class UploaderDownloaderXBlock(XBlock):
                         "aws_key":settings.AWS_ACCESS_KEY_ID,
                         "unit_id":unit_id,
                         "s3_mid_folder":self.s3_mid_folder,
-			"course_level":course_level,
+            "course_level":course_level,
                         "general_title":self.general_title,
                         "size_limit":self.size_limit,
                         "bin_icon":self.runtime.local_resource_url(self, 'static/img/bin.png'),
@@ -180,7 +180,10 @@ class UploaderDownloaderXBlock(XBlock):
                 if not self.is_valid_policy(request_payload):
                     raise JsonHandlerError(400, 'Points must be an integer')
                 response_data = self.sign_policy_document(request_payload)
-            response_payload = json.dumps(response_data)
+            log.info("===response_data===")
+            response_data_decode = {k: v.decode() for k,v in response_data.items()}
+            log.info(response_data_decode)
+            response_payload = json.dumps(response_data_decode)
             response_payload = json.loads(response_payload)
             return response_payload
 
@@ -199,7 +202,7 @@ class UploaderDownloaderXBlock(XBlock):
         if folder_name is None:
             folder_name = course_level
         else:
-	    folder_name = course_level + '/' + folder_name
+            folder_name = course_level + '/' + folder_name
         fileuploader = FileAndUrl()
         fileuploader.create_record(file_name, file_title, description, uploaded_by, unit_id, course_level, folder_name, is_url)
         return
@@ -229,7 +232,7 @@ class UploaderDownloaderXBlock(XBlock):
             aws_bucket = S3.get_bucket(bucket_name, validate=False)
 
             fileuploader = FileAndUrl()
-	    log.info(u"fileuploader.get_file_path(file_id)%s",fileuploader.get_file_path(file_id))
+            log.info(u"fileuploader.get_file_path(file_id)%s",fileuploader.get_file_path(file_id))
             #Delete for S3
             file_key = Key(aws_bucket, fileuploader.get_file_path(file_id))
             file_key.delete()
@@ -317,8 +320,11 @@ class UploaderDownloaderXBlock(XBlock):
         """ Sign and return the policy doucument for a simple upload.
         http://aws.amazon.com/articles/1434/#signyours3postform
         """
-        policy = base64.b64encode(json.dumps(policy_document))
-        signature = base64.b64encode(hmac.new(str(settings.AWS_SECRET_ACCESS_KEY), policy, hashlib.sha1).digest())
+        policy = base64.b64encode(json.dumps(policy_document).encode())
+        log.info("=====upload_image=====")
+        encode_str = hmac.new(str(settings.AWS_SECRET_ACCESS_KEY).encode(), policy, hashlib.sha1).digest()
+        log.info(encode_str)
+        signature = base64.b64encode(encode_str)
         return {
             'policy': policy,
             'signature': signature
