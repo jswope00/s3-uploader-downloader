@@ -58,6 +58,7 @@ class UploaderDownloaderXBlock(XBlock):
         context["uploadable_by_students"] = self.uploadable_by_students
         context['size_limit'] = self.size_limit
         context['paginate'] = self.paginate
+        context['s3_bucket'] = self.s3_bucket or ''
 
         if(context["uploadable_by_students"]==True):
             context["check_uploadable_by_students"] = "checked"
@@ -84,6 +85,7 @@ class UploaderDownloaderXBlock(XBlock):
         self.uploadable_by_students = data.get('uploadable_by_students')
         self.size_limit = data.get('size_limit')
         self.paginate = data.get('paginate')
+        self.s3_bucket = data.get('s3_bucket')
 
         return {'result': 'success'}
 
@@ -114,7 +116,8 @@ class UploaderDownloaderXBlock(XBlock):
                         "aws_key":settings.AWS_ACCESS_KEY_ID,
                         "unit_id":unit_id,
                         "s3_mid_folder":self.s3_mid_folder,
-			"course_level":course_level,
+                        "s3_bucket": self.s3_bucket,
+                        "course_level":course_level,
                         "general_title":self.general_title,
                         "size_limit":self.size_limit,
                         "bin_icon":self.runtime.local_resource_url(self, 'static/img/bin.png'),
@@ -169,11 +172,11 @@ class UploaderDownloaderXBlock(XBlock):
         if data.get('success', None):
             return self.make_response(200)
         else:
-            request_payload = data 
+            request_payload = data
             headers = request_payload.get('headers', None)
             if headers:
-                # The presence of the 'headers' property in the request payload 
-                # means this is a request to sign a REST/multipart request 
+                # The presence of the 'headers' property in the request payload
+                # means this is a request to sign a REST/multipart request
                 # and NOT a policy document
                 response_data = self.sign_headers(headers)
             else:
@@ -326,7 +329,7 @@ class UploaderDownloaderXBlock(XBlock):
 
     def is_valid_policy(self, policy_document):
         """ Verify the policy document has not been tampered with client-side
-        before sending it off. 
+        before sending it off.
         """
         bucket = ''
         parsed_max_size = 0
