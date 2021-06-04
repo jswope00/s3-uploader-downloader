@@ -42,7 +42,7 @@ class UploaderDownloaderXBlock(XBlock):
     uploadable_by_students = Boolean(default=False, scope=Scope.settings)
     size_limit = Integer(default=10,scope=Scope.content,help="Number of recordings on one page")
     paginate = Integer(default=20,scope=Scope.content)
-    s3_bucket = String(default='public-sgu', scope=Scope.settings)
+    s3_bucket = String(default=settings.AWS_STORAGE_BUCKET_NAME, scope=Scope.settings)
 
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
