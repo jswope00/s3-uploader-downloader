@@ -16,6 +16,13 @@
     </li>
     <li class="field comp-setting-entry is-set">
       <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="s3_bucket">S3 Bucket Name</label>
+        <input class="input setting-input" name="s3_bucket" id="s3_bucket" type="text" value="{{s3_bucket}}" />
+      </div>
+      <span class="tip setting-help">Make sure you have this bucket created on AWS.</span>
+    </li>
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
         <label class="label setting-label" for="uploadable_by">Uploadable by</label>
           <input type="radio" name="uploadable_by" id="uploadable_by_staff" style="height: inherit;width: inherit;" {{check_uploadable_by_staff}}>
           <label style="padding-right: 100px;">Staff</label>
