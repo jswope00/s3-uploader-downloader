@@ -12,6 +12,10 @@ table.dataTable, table.dataTable th, table.dataTable td {
 	box-sizing: border-box;
 }
 
+.comp-setting-entry.s3_bucket-name {
+	display: none;
+}
+
 .dataTables_wrapper
 .dataTables_paginate
 .paginate_button,
