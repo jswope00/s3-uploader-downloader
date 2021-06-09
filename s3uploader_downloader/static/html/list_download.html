@@ -4,11 +4,11 @@
     <table id="uploads" class="display" cellspacing="0" width="100%" data-page-length={{paginate}}>
         <thead>
             <tr>
-                <th style="min-width:200px">Name</th>
-                <th style="min-width:150px">Description</th>
+                <th style="min-width:150px">Name</th>
+                <th style="min-width:120px">Description</th>
                 <th style="min-width:100px">Uploaded By</th>
                 <th style="min-width:120px">Date Uploaded</th>
-                <th style="min-width:50px">Action</th>
+                <th style="min-width:80px">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -24,8 +24,8 @@
                 <td>{{ row.date_uploaded }}</td>
                 <td style="text-align: center">
                     {% if row.uploaded_by == username or self.runtime.user_is_staff %}
-                    <span><a href=#><img id = "{{row.id}}" src={{gear_icon}} class="name_edit" width="15px"></a></span> 
-                    <span><a href=#><img id = "{{row.id}}" src={{bin_icon}} class="delete_row" width="15px"></a></span> 
+                    <span><a href=#><img id = "{{row.id}}" src={{gear_icon}} class="name_edit" width="15px"></a></span>
+                    <span><a href=#><img id = "{{row.id}}" src={{bin_icon}} class="delete_row" width="15px"></a></span>
                     {% endif %}
                 </td>
             </tr>

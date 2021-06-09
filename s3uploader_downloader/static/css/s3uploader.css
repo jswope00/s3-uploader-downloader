@@ -4,15 +4,19 @@
 
 #uploads th,
 #uploads_wrapper table{
-	border-bottom: 1px solid #c8c8c8
+	border-bottom: 1px solid #c8c8c8;
+	box-sizing: border-box;
 }
 
+table.dataTable, table.dataTable th, table.dataTable td {
+	box-sizing: border-box;
+}
 
-.dataTables_wrapper 
-.dataTables_paginate 
+.dataTables_wrapper
+.dataTables_paginate
 .paginate_button,
-.dataTables_wrapper 
-.dataTables_paginate 
+.dataTables_wrapper
+.dataTables_paginate
 .paginate_button.current{
 	border-radius: 3px;
 	background: white;
@@ -20,11 +24,11 @@
 	color: black !important;
 }
 
-.dataTables_wrapper 
-.dataTables_paginate 
+.dataTables_wrapper
+.dataTables_paginate
 .paginate_button:hover,
-.dataTables_wrapper 
-.dataTables_paginate 
+.dataTables_wrapper
+.dataTables_paginate
 .paginate_button.current:hover{
 	border-radius: 3px;
 	border: 1px solid #c8c8c8;
