@@ -7,11 +7,12 @@ function s3UploaderDownloaderEditBlock(runtime, element) {
     var data = {
       general_title: $(element).find('input[name=general_title]').val(),
       s3_mid_folder: $(element).find('input[name=s3_mid_folder]').val(),
+      s3_bucket: $(element).find('input[name=s3_bucket]').val(),
       uploadable_by_students : $(element).find('input[id=uploadable_by_students]')[0].checked,
       size_limit : $(element).find('input[id=size_limit]').val(),
       paginate : $(element).find('input[id=paginate]').val()
     };
-    
+
     runtime.notify('save', {state: 'start'});
 
     console.log("===========");
